@@ -2,6 +2,7 @@ package com.example.vitalykulyk.metronom;
 
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,13 +39,16 @@ public class MetronomService extends Service {
     private Button minusButton;
     private TextView currentBeat;
 
+    private Vibrator v;
+
+
     // work with FlashLoght
     private Camera camera;
     private boolean isFlashOn;
     private boolean hasFlash;
     Camera.Parameters params;
 
-    Metronome metronome = new Metronome();
+    Metronome metronome;
 
     public MetronomService() {
 
@@ -53,6 +58,7 @@ public class MetronomService extends Service {
     public void onCreate() {
         Log.i(TAG, "Service onCreate");
         isRunning = true;
+        metronome = new Metronome(this);
 
 
 

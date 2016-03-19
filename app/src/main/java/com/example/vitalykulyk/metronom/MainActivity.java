@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initializeVariables();
 
-        camera = Camera.open();
-        params = camera.getParameters();
+//        camera = Camera.open();
+//        params = camera.getParameters();
 
 
         speedEdit.setOnClickListener(new View.OnClickListener() {

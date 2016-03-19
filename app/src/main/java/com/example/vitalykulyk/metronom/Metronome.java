@@ -1,10 +1,12 @@
 package com.example.vitalykulyk.metronom;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Message;
+import android.os.Vibrator;
 
 
 public class Metronome {
@@ -31,11 +33,14 @@ public class Metronome {
 	private boolean isFlashOn;
 	private boolean hasFlash;
 	Camera.Parameters params;
-	
-	public Metronome() {
+	Context context;
+
+	private Vibrator v;
+
+	public Metronome(Context context) {
 		audioGenerator.createPlayer();
-
-
+		this.context = context;
+		v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 	
 	public void calcSilence() {
@@ -60,6 +65,9 @@ public class Metronome {
 //		isFlashOn = true;
 
 		do {
+			//vibration
+			v.vibrate(200);
+			//make sound
 			audioGenerator.writeSound(soundTickArray);
 			audioGenerator.writeSound(silenceSoundArray);
 			currentBeat++;
@@ -71,12 +79,6 @@ public class Metronome {
 	public void stop() {
 		play = false;
 		audioGenerator.destroyAudioTrack();
-
-//		params = camera.getParameters();
-//		params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-//		camera.setParameters(params);
-//		camera.stopPreview();
-//		isFlashOn = false;
 	}
 
 	public double getBpm() {
