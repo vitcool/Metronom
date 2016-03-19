@@ -120,7 +120,11 @@ public class MetronomService extends Service {
         metronome.setBeatSound(beatSound);
         metronome.setSound(sound);
 
-        metronome.play();
+        try {
+            metronome.play();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 

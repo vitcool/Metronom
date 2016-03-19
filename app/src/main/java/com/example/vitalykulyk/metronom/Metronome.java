@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 
 
 public class Metronome {
@@ -18,7 +19,7 @@ public class Metronome {
 
 	private double beatSound;
 	private double sound;
-	private final int tick = 1000; // samples of tick
+	private final int tick = 2000; // samples of tick
 	
 	private boolean play = true;
 	
@@ -41,6 +42,44 @@ public class Metronome {
 		audioGenerator.createPlayer();
 		this.context = context;
 		v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+
+		/*
+ * First check if device is supporting flashlight or not
+ */
+		hasFlash = context.getApplicationContext().getPackageManager()
+				.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+
+		if (!hasFlash) {
+			// device doesn't support flash
+			// Show alert message and close the application
+			AlertDialog alert = new AlertDialog.Builder(context)
+					.create();
+			alert.setTitle("Error");
+			alert.setMessage("Sorry, your device doesn't support flash light!");
+			alert.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// closing the application
+				}
+			});
+			alert.show();
+			return;
+		}
+
+		getCamera();
+
+
+	}
+
+	private void getCamera() {
+		if (camera == null) {
+			try {
+				camera = Camera.open();
+				params = camera.getParameters();
+			} catch (RuntimeException e) {
+				Log.e("Camera Error-Error: ", e.getMessage());
+			}
+		}
 	}
 	
 	public void calcSilence() {
@@ -55,14 +94,10 @@ public class Metronome {
 			silenceSoundArray[i] = 0;
 	}
 	
-	public void play() {
+	public void play() throws InterruptedException {
 		calcSilence();
 
-//		params = camera.getParameters();
-//		params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-//		camera.setParameters(params);
-//		camera.startPreview();
-//		isFlashOn = true;
+
 
 		do {
 			//vibration
@@ -73,13 +108,48 @@ public class Metronome {
 			currentBeat++;
 			if(currentBeat > beat)
 				currentBeat = 1;
+			//flashLightStart();
+			params = camera.getParameters();
+			params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+			camera.setParameters(params);
+			camera.startPreview();
+			isFlashOn = true;
+
+			params = camera.getParameters();
+			params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+			camera.setParameters(params);
+			camera.stopPreview();
+			isFlashOn = false;
+
 		} while(play);
 	}
 	
 	public void stop() {
 		play = false;
 		audioGenerator.destroyAudioTrack();
+		//flashLightFinish();
+
 	}
+
+	public void flashLightStart(){
+		params = camera.getParameters();
+		params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+		camera.setParameters(params);
+		camera.startPreview();
+		isFlashOn = true;
+	}
+
+	public void flashLightFinish()  {
+		params = camera.getParameters();
+		params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+		camera.setParameters(params);
+
+		camera.stopPreview();
+		isFlashOn = false;
+
+	}
+
+
 
 	public double getBpm() {
 		return bpm;
@@ -120,5 +190,6 @@ public class Metronome {
 	public void setSound(double sound2) {
 		this.sound = sound2;
 	}
+
 
 }
