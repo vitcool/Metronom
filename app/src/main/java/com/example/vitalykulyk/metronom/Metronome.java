@@ -19,10 +19,16 @@ public class Metronome {
 
 	private double beatSound;
 	private double sound;
-	private final int tick = 2000; // samples of tick
+	private final int tick = 1000; // samples of tick
 	
 	private boolean play = true;
-	
+
+	private boolean isFlashOn;
+	private boolean isSoundOn;
+	private boolean isVibrationOn;
+
+
+
 	private AudioGenerator audioGenerator = new AudioGenerator(8000);
 //	private Handler mHandler;
 	private double[] soundTickArray;
@@ -31,7 +37,6 @@ public class Metronome {
 	private int currentBeat = 1;
 
 	private Camera camera;
-	private boolean isFlashOn;
 	private boolean hasFlash;
 	Camera.Parameters params;
 	Context context;
@@ -41,33 +46,37 @@ public class Metronome {
 	public Metronome(Context context) {
 		audioGenerator.createPlayer();
 		this.context = context;
-		v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+
+			v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+
 
 
 		/*
  * First check if device is supporting flashlight or not
  */
-		hasFlash = context.getApplicationContext().getPackageManager()
-				.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
-		if (!hasFlash) {
-			// device doesn't support flash
-			// Show alert message and close the application
-			AlertDialog alert = new AlertDialog.Builder(context)
-					.create();
-			alert.setTitle("Error");
-			alert.setMessage("Sorry, your device doesn't support flash light!");
-			alert.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					// closing the application
-				}
-			});
-			alert.show();
-			return;
-		}
+			hasFlash = context.getApplicationContext().getPackageManager()
+					.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
-		getCamera();
+			if (!hasFlash) {
+				// device doesn't support flash
+				// Show alert message and close the application
+				AlertDialog alert = new AlertDialog.Builder(context)
+						.create();
+				alert.setTitle("Error");
+				alert.setMessage("Sorry, your device doesn't support flash light!");
+				alert.setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// closing the application
+					}
+				});
+				alert.show();
+				return;
+			}
 
+			getCamera();
 
 	}
 
@@ -101,26 +110,22 @@ public class Metronome {
 
 		do {
 			//vibration
-			v.vibrate(200);
+			if (isVibrationOn) {
+				Log.i("ISVIBRATIONON", "");
+				v.vibrate(200);
+			}
 			//make sound
-			audioGenerator.writeSound(soundTickArray);
-			audioGenerator.writeSound(silenceSoundArray);
-			currentBeat++;
-			if(currentBeat > beat)
-				currentBeat = 1;
+				audioGenerator.writeSound(soundTickArray);
+				audioGenerator.writeSound(silenceSoundArray);
+				currentBeat++;
+				if (currentBeat > beat)
+					currentBeat = 1;
 			//flashLightStart();
-			params = camera.getParameters();
-			params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-			camera.setParameters(params);
-			camera.startPreview();
-			isFlashOn = true;
-
-			params = camera.getParameters();
-			params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-			camera.setParameters(params);
-			camera.stopPreview();
-			isFlashOn = false;
-
+			if (isFlashOn){
+				Log.i("ISFLASHON", "");
+				flashLightStart();
+				flashLightFinish();
+			}
 		} while(play);
 	}
 	
@@ -136,7 +141,7 @@ public class Metronome {
 		params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 		camera.setParameters(params);
 		camera.startPreview();
-		isFlashOn = true;
+
 	}
 
 	public void flashLightFinish()  {
@@ -145,7 +150,7 @@ public class Metronome {
 		camera.setParameters(params);
 
 		camera.stopPreview();
-		isFlashOn = false;
+
 
 	}
 
@@ -189,6 +194,18 @@ public class Metronome {
 
 	public void setSound(double sound2) {
 		this.sound = sound2;
+	}
+
+	public void setIsFlashOn(boolean isFlashOn) {
+		this.isFlashOn = isFlashOn;
+	}
+
+	public void setIsSoundOn(boolean isSoundOn) {
+		this.isSoundOn = isSoundOn;
+	}
+
+	public void setIsVibrationOn(boolean isVibrationOn) {
+		this.isVibrationOn = isVibrationOn;
 	}
 
 

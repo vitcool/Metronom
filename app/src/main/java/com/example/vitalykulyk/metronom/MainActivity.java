@@ -35,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean isStarted;
     private TextView bmpText;
 
+    private boolean isFlashlightOn = true;
+    private boolean isSoundOn = true;
+    private boolean isVibrationOn = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -63,13 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("vibration layout", vibrationOn + "");
                 if (vibrationOn){
                     vibrationButton.setImageResource(R.drawable.ic_vibration_off_img);
-                    vibrationOn = false;
+                    isVibrationOn = false;
                 }
                 else{
                     vibrationButton.setImageResource(R.drawable.ic_vibration_img);
-                    vibrationOn = true;
+                    isVibrationOn = true;
                 }
-
+                vibrationOn = !vibrationOn;
             }
         });
 
@@ -80,9 +84,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("sound layout", soundOn + "");
                 if (soundOn){
                     soundButton.setImageResource(R.drawable.ic_sound_off_img);
+                    isSoundOn = false;
                 }
                 else{
                     soundButton.setImageResource(R.drawable.ic_sound_img);
+                    isSoundOn = false;
                 }
                 soundOn = !soundOn;
             }
@@ -95,9 +101,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("flash layout", flashOn + "");
                 if (flashOn){
                     flashButton.setImageResource(R.drawable.ic_flash_off_img);
+                    isFlashlightOn = false;
                 }
                 else{
                     flashButton.setImageResource(R.drawable.ic_flash_img);
+                    isFlashlightOn = true;
                 }
                 flashOn = !flashOn;
             }
@@ -106,12 +114,15 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isStarted){
+                if (!isStarted) {
                     startButton.setText(R.string.stop);
                     startButton.setBackgroundColor(Color.parseColor("#010101"));
                     Intent i = new Intent(MainActivity.this, MetronomService.class);
                     Log.i("OnClick", speedEdit.getText() + "");
                     i.putExtra("BPM", Short.parseShort(speedEdit.getText().toString()));
+                    i.putExtra("isSoundOn", isSoundOn );
+                    i.putExtra("isFlashlightOn", isFlashlightOn);
+                    i.putExtra("isVibrationOn", isVibrationOn);
                     MainActivity.this.startService(i);
 
 //                    startService(
