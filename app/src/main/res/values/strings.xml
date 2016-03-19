@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Metronom</string>
+    <string name="manual_mode">MANUAL MODE</string>
+    <string name="vibration">VIBRATION</string>
+    <string name="flash">FLASH</string>
+    <string name="sound">SOUND</string>
+    <string name="settings_text">SET BPM YOU NEED BELOW</string>
+    <string name="bmp">bmp</string>
+    <string name="indicator">INDICATOR</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+
 </resources>
