@@ -1,7 +1,9 @@
 package com.example.vitalykulyk.metronom;
 
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout soundLayout;
     private Button startButton;
     private boolean isStarted;
+    private TextView bmpText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeVariables();
+
+        camera = Camera.open();
+        params = camera.getParameters();
 
 
         speedEdit.setOnClickListener(new View.OnClickListener() {
@@ -103,17 +109,26 @@ public class MainActivity extends AppCompatActivity {
                 if (!isStarted){
                     startButton.setText(R.string.stop);
                     startButton.setBackgroundColor(Color.parseColor("#010101"));
+                    Intent i = new Intent(MainActivity.this, MetronomService.class);
+                    Log.i("OnClick", speedEdit.getText() + "");
+                    i.putExtra("BPM", Short.parseShort(speedEdit.getText().toString()));
+                    MainActivity.this.startService(i);
+
+//                    startService(
+//                            new Intent(MainActivity.this, MetronomService.class));
                 }
                 else{
                     startButton.setText(R.string.start);
                     startButton.setBackgroundColor(Color.parseColor("#03a9f4"));
+                    stopService(
+                            new Intent(MainActivity.this, MetronomService.class));
                 }
                 isStarted = !isStarted;
             }
         });
 
 
-        seekBar.setProgress(5);
+        seekBar.setProgress(100);
         // Initialize the textview with '0'.
         speedEdit.setText(seekBar.getProgress() + "");
 
@@ -147,5 +162,10 @@ public class MainActivity extends AppCompatActivity {
         soundLayout = (RelativeLayout) findViewById(R.id.soundLayout);
         flashLayout = (RelativeLayout) findViewById(R.id.flashLayout);
         startButton = (Button)findViewById(R.id.startButton);
+        bmpText = (TextView) findViewById(R.id.speedEdit);
+    }
+
+    private void flashlight(){
+
     }
 }

@@ -168,7 +168,7 @@
                     android:clickable="true"
                     android:lines="1"
                     android:background="@android:color/transparent"
-                    />
+                    android:textSize="36sp"/>
 
                 <TextView
                     android:id="@+id/bmpText"
@@ -177,7 +177,7 @@
                     android:text="@string/bmp"
                     android:layout_toRightOf="@id/speedEdit"
                     android:layout_marginLeft="24dp"
-                    android:layout_marginTop="36dp"
+                    android:layout_marginTop="24dp"
                     android:textSize="24sp"
                     />
 
@@ -198,7 +198,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="26dp"
-        android:max="10"/>
+        android:max="400"/>
 
     <RelativeLayout
         android:id="@+id/indicator"
