@@ -198,7 +198,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="26dp"
-        android:max="400"/>
+        android:max="200"/>
 
     <RelativeLayout
         android:id="@+id/indicator"

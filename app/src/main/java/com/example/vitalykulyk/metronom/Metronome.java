@@ -27,8 +27,6 @@ public class Metronome {
 	private boolean isSoundOn;
 	private boolean isVibrationOn;
 
-
-
 	private AudioGenerator audioGenerator = new AudioGenerator(8000);
 //	private Handler mHandler;
 	private double[] soundTickArray;
@@ -75,9 +73,7 @@ public class Metronome {
 				alert.show();
 				return;
 			}
-
 			getCamera();
-
 	}
 
 	private void getCamera() {
@@ -92,22 +88,27 @@ public class Metronome {
 	}
 	
 	public void calcSilence() {
-		silence = (int) (((60/bpm)*8000)-tick);		
-		soundTickArray = new double[this.tick];	
-		silenceSoundArray = new double[this.silence];
-		double[] tick = audioGenerator.getSineWave(this.tick, 8000, beatSound);
-		for(int i=0;i<this.tick;i++) {
-			soundTickArray[i] = tick[i];
-		}
-		for(int i=0;i<silence;i++)
-			silenceSoundArray[i] = 0;
+			silence = (int) (((60/bpm)*8000)-tick);
+			soundTickArray = new double[this.tick];
+			Log.i("calcSilence", silence + "");
+			if (this.silence < Integer.MAX_VALUE){
+				silenceSoundArray = new double[this.silence];
+			}
+			else {
+				silence = (int) (((60/bpm)*8000)-tick);
+				silenceSoundArray = new double[this.silence];
+			}
+			double[] tick = audioGenerator.getSineWave(this.tick, 8000, beatSound);
+			for(int i=0;i<this.tick;i++) {
+				soundTickArray[i] = tick[i];
+			}
+			for(int i=0;i<silence;i++){
+				silenceSoundArray[i] = 0;
+			}
 	}
 	
 	public void play() throws InterruptedException {
 		calcSilence();
-
-
-
 		do {
 			//vibration
 			if (isVibrationOn) {
@@ -115,7 +116,9 @@ public class Metronome {
 				v.vibrate(200);
 			}
 			//make sound
+			if (isSoundOn) {
 				audioGenerator.writeSound(soundTickArray);
+			}
 				audioGenerator.writeSound(silenceSoundArray);
 				currentBeat++;
 				if (currentBeat > beat)
@@ -133,7 +136,6 @@ public class Metronome {
 		play = false;
 		audioGenerator.destroyAudioTrack();
 		//flashLightFinish();
-
 	}
 
 	public void flashLightStart(){
