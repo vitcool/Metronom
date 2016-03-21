@@ -1,20 +1,19 @@
 package com.example.vitalykulyk.metronom;
 
-import android.app.AlertDialog;
-import android.app.Service;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
+/**
+ * The Metronom program developed specially
+ * according tecnical task
+ * https://docs.google.com/document/d/1g_0IHQRu3aOm1sYKxWMtbhY8NjTABGInqpoFJAGX9Wg/edit
+ *
+ * @author  Vitalii Kulyk
+ * @version 1.0
+ * @since   2016-03-21
+ */
 
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.media.AudioManager;
+import android.app.Service;
+import android.content.Intent;
 import android.os.IBinder;
-import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MetronomService extends Service {
 
@@ -97,7 +96,6 @@ public class MetronomService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

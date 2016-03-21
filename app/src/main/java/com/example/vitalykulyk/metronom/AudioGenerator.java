@@ -1,10 +1,14 @@
-/**
- * Lines 25 and 31-38 were originally found here:
- * http://stackoverflow.com/questions/2413426/playing-an-arbitrary-tone-with-android
- * which came from here:
- * http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
- */
 package com.example.vitalykulyk.metronom;
+
+/**
+ * The Metronom program developed specially
+ * according tecnical task
+ * https://docs.google.com/document/d/1g_0IHQRu3aOm1sYKxWMtbhY8NjTABGInqpoFJAGX9Wg/edit
+ *
+ * @author  Vitalii Kulyk
+ * @version 1.0
+ * @since   2016-03-21
+ */
 
 import android.media.AudioFormat;
 import android.media.AudioManager;

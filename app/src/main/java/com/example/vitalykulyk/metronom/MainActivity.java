@@ -1,5 +1,15 @@
 package com.example.vitalykulyk.metronom;
 
+/**
+ * The Metronom program developed specially
+ * according tecnical task
+ * https://docs.google.com/document/d/1g_0IHQRu3aOm1sYKxWMtbhY8NjTABGInqpoFJAGX9Wg/edit
+ *
+ * @author  Vitalii Kulyk
+ * @version 1.0
+ * @since   2016-03-21
+ */
+
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,42 +26,55 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
+/**
+ * The MainActivity class is a class extends AppCompatActivity
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private SeekBar seekBar;
-    private TextView speedEdit;
+    /**
+     * Variables of UI
+     */
     private ImageButton flashButton;
     private ImageButton vibrationButton;
     private ImageButton soundButton;
-    private boolean vibrationOn = true;
-    private boolean flashOn = true;
-    private boolean soundOn     = true;
+
+    private SeekBar seekBar;
+
     private RelativeLayout vibrationLayout;
     private RelativeLayout flashLayout;
     private RelativeLayout soundLayout;
+
     private Button startButton;
-    private boolean isStarted;
-    private TextView bmpText;
+
     private View view;
 
     private TextView vibrationText;
     private TextView soundText;
     private TextView flashText;
+    private TextView speedEdit;
 
-    private boolean isFlashlightOn   = true;
-    private boolean isSoundOn        = true;
-    private boolean isVibrationOn    = true;
+    /**
+     * Variables to make my programm better
+     */
+
+    private boolean isFlashlightOn = true;
+    private boolean isSoundOn = true;
+    private boolean isVibrationOn = true;
+    private boolean vibrationOn = true;
+    private boolean flashOn = true;
+    private boolean soundOn = true;
+    private boolean isStarted;
+
+    private int ms_per_beat;
 
 
-    @Override
-    public void onBackPressed() {
-        SavePreferences();
-        super.onBackPressed();
-    }
-
+    /**
+     * @Override onCreate
+     * method which calls first when the app execute
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         initializeVariables();
         LoadPreferences();
 
+
+        /**
+         * add ability to write text into speedEdit TextView
+         */
         speedEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,98 +97,83 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        /**
+         * set OnClickListener to vibrationButton as response to click on vibrationButton
+         */
         vibrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.w("vibration layout", vibrationOn + "");
                 if (vibrationOn) {
-                    vibrationButton.setImageResource(R.drawable.ic_vibration_off_img);
-                    vibrationText.setTextColor(getResources().getColor(R.color.red));
-                    isVibrationOn = false;
+                    vibrationOff();
                 } else {
-                    vibrationButton.setImageResource(R.drawable.ic_vibration_img);
-                    vibrationText.setTextColor(getResources().getColor(R.color.green));
-                    isVibrationOn = true;
+                    vibrationOn();
                 }
                 vibrationOn = !vibrationOn;
             }
         });
 
 
+        /**
+         * set OnClickListener to soundButton as response to click on soundButton
+         */
         soundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.w("sound layout", soundOn + "");
                 if (soundOn) {
-                    soundButton.setImageResource(R.drawable.ic_sound_off_img);
-                    soundText.setTextColor(getResources().getColor(R.color.red));
-                    isSoundOn = false;
+                    soundOff();
                 } else {
-                    soundButton.setImageResource(R.drawable.ic_sound_img);
-                    soundText.setTextColor(getResources().getColor(R.color.green));
-                    isSoundOn = true;
+                    soundOn();
                 }
                 soundOn = !soundOn;
             }
         });
 
-
+        /**
+         * set OnClickListener to flashButton as response to click on flashButton
+         */
         flashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.w("flash layout", flashOn + "");
                 if (flashOn) {
-                    flashButton.setImageResource(R.drawable.ic_flash_off_img);
-                    flashText.setTextColor(getResources().getColor(R.color.red));
-                    isFlashlightOn = false;
+                    flashOff();
                 } else {
-                    flashButton.setImageResource(R.drawable.ic_flash_img);
-                    flashText.setTextColor(getResources().getColor(R.color.green));
-                    isFlashlightOn = true;
+                    flashOn();
                 }
                 flashOn = !flashOn;
             }
         });
 
+        /**
+         *  set OnClickListener to startButton as response to click on startButton
+         *  program executing starts
+         */
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isStarted) {
-                    startButton.setText(R.string.stop);
-                    startButton.setBackgroundColor(Color.parseColor("#0BF2EA"));
-                    int ms_per_beat = 1000 * 60 / Short.parseShort(speedEdit.getText().toString());
-                    Intent i = new Intent(MainActivity.this, MetronomService.class);
-                    Log.i("OnClick", speedEdit.getText() + "");
-                    i.putExtra("BPM", Short.parseShort(speedEdit.getText().toString()));
-                    i.putExtra("isSoundOn", isSoundOn);
-                    Log.i("Main Activity isSoundOn", isSoundOn + "");
-                    i.putExtra("isFlashlightOn", isFlashlightOn);
-                    i.putExtra("isVibrationOn", isVibrationOn);
-                    MainActivity.this.startService(i);
-                    Animation anim = new AlphaAnimation(1.0f, 0.0f);
-                    anim.setDuration(ms_per_beat / 2); //You can manage the time of the blink with this parameter
-                    anim.setStartOffset(0);
-                    anim.setRepeatMode(Animation.REVERSE);
-                    anim.setRepeatCount(Animation.INFINITE);
-                    view.startAnimation(anim);
+                    startButtonStop();
+                    startService();
+                    startAnimation();
+
                 } else {
-                    startButton.setText(R.string.start);
-                    startButton.setBackgroundColor(Color.parseColor("#03a9f4"));
-                    stopService(
-                            new Intent(MainActivity.this, MetronomService.class));
-                    Animation anim = new AlphaAnimation(0.0f, 0.0f);
-                    view.startAnimation(anim);
+                    startButtonStart();
+                    stopService();
+                    stopAnimation();
                 }
+                ms_per_beat = 1000 * 60 / Short.parseShort(speedEdit.getText().toString());
                 isStarted = !isStarted;
             }
         });
 
-
+        /**
+         * customization of seekBar
+         * start value is 100
+         */
         seekBar.setProgress(100);
-        // Initialize the textview with '0'.
-        speedEdit.setText(seekBar.getProgress() + "");
-
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
 
@@ -179,9 +191,144 @@ public class MainActivity extends AppCompatActivity {
                 speedEdit.setText(progress + "");
             }
         });
+
+        /**
+         * initialization of speedEdit by value of seekbar
+         */
+        speedEdit.setText(seekBar.getProgress() + "");
     }
 
-    // A private method to help us initialize our variables.
+    /**
+     * method stops the animation of indicator
+     */
+    private void stopAnimation() {
+        Animation anim = new AlphaAnimation(0.0f, 0.0f);
+        view.startAnimation(anim);
+    }
+
+    /**
+     * method stops service of metronom
+     *
+    */
+    private void stopService() {
+        stopService(
+                new Intent(MainActivity.this, MetronomService.class));
+    }
+
+    /**
+     * method sets text and background of startButton
+     */
+    private void startButtonStart() {
+        startButton.setText(R.string.start);
+        startButton.setBackgroundColor(Color.parseColor("#03a9f4"));
+
+    }
+
+    /**
+     * method sets text and background of startButton
+     */
+    private void startButtonStop() {
+        startButton.setText(R.string.stop);
+        startButton.setBackgroundColor(Color.parseColor("#0BF2EA"));
+
+    }
+
+    /**
+     * method starts animation of indicator
+     */
+    private void startAnimation() {
+        Animation anim = new AlphaAnimation(1.0f, 0.0f);
+        anim.setDuration(ms_per_beat); //You can manage the time of the blink with this parameter
+        anim.setStartOffset(0);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        view.startAnimation(anim);
+    }
+
+    /**
+     * method starts service of metronom
+     */
+    private void startService() {
+        Intent i = new Intent(MainActivity.this, MetronomService.class);
+        i.putExtra("BPM", Short.parseShort(speedEdit.getText().toString()));
+        i.putExtra("isSoundOn", isSoundOn);
+        i.putExtra("isFlashlightOn", isFlashlightOn);
+        i.putExtra("isVibrationOn", isVibrationOn);
+        MainActivity.this.startService(i);
+    }
+
+
+    /**
+     * onBackPressed mathod calls when back button pressed
+     * execute method SavePreferences which save all preferences
+     */
+    @Override
+    public void onBackPressed() {
+        SavePreferences();
+        super.onBackPressed();
+    }
+
+    /**
+     * flashOn sets Image of flashButton and text color of flashText
+     */
+    private void flashOn() {
+        flashButton.setImageResource(R.drawable.ic_flash_img);
+        flashText.setTextColor(getResources().getColor(R.color.green));
+        isFlashlightOn = true;
+    }
+
+    /**
+     * flashOff sets Image of flashButton and text color of flashText
+     */
+    private void flashOff() {
+        flashButton.setImageResource(R.drawable.ic_flash_off_img);
+        flashText.setTextColor(getResources().getColor(R.color.red));
+        isFlashlightOn = false;
+    }
+
+    /**
+     * soundOn sets Image of soundButton and text color of soundText
+     */
+    private void soundOn() {
+        soundButton.setImageResource(R.drawable.ic_sound_img);
+        soundText.setTextColor(getResources().getColor(R.color.green));
+        isSoundOn = true;
+    }
+
+    /**
+     * soundOff sets Image of soundButton and text color of soundText
+     */
+    private void soundOff() {
+        soundButton.setImageResource(R.drawable.ic_sound_off_img);
+        soundText.setTextColor(getResources().getColor(R.color.red));
+        isSoundOn = false;
+    }
+
+    /**
+     * vibrationOn sets Image of vibrationButton and text color of vibrationText
+     */
+    private void vibrationOn() {
+        vibrationButton.setImageResource(R.drawable.ic_vibration_img);
+        vibrationText.setTextColor(getResources().getColor(R.color.green));
+        isVibrationOn = true;
+
+    }
+
+    /**
+     * vibrationOff sets Image of vibrationButton and text color of vibrationText
+     */
+    private void vibrationOff() {
+        vibrationButton.setImageResource(R.drawable.ic_vibration_off_img);
+        vibrationText.setTextColor(getResources().getColor(R.color.red));
+        isVibrationOn = false;
+    }
+
+
+
+    /**
+     * initializeVariables helps initializate all of UI variables
+     * calls in OnCreate method
+     */
     private void initializeVariables() {
         seekBar = (SeekBar) findViewById(R.id.seekBar1);
         speedEdit = (TextView) findViewById(R.id.speedEdit);
@@ -192,17 +339,16 @@ public class MainActivity extends AppCompatActivity {
         soundLayout = (RelativeLayout) findViewById(R.id.soundLayout);
         flashLayout = (RelativeLayout) findViewById(R.id.flashLayout);
         startButton = (Button) findViewById(R.id.startButton);
-        bmpText = (TextView) findViewById(R.id.speedEdit);
         view = (View) findViewById(R.id.indicatorView);
         flashText = (TextView)findViewById(R.id.flashText);
         vibrationText = (TextView)findViewById(R.id.vibrationText);
         soundText = (TextView)findViewById(R.id.soundText);
     }
 
-    private void flashlight() {
 
-    }
-
+    /**
+     * SavePreferences saved boolean variables into saved preferences
+     */
     private void SavePreferences(){
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -210,61 +356,66 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean("isSoundOn    ", isSoundOn);
         editor.putBoolean("isVibrationOn", isVibrationOn);
         editor.putBoolean("isStarted    ", isStarted);
-        editor.putInt("bpm",Integer.parseInt(speedEdit.getText().toString())*2);
-        editor.commit();// I missed to save the data to preference here,.
+        editor.putInt("bpm",Integer.parseInt(speedEdit.getText().toString()));
+        editor.commit();
     }
 
+    /**
+     * LoadPreferences load boolean variables from saved preferences
+     */
     private void LoadPreferences(){
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        ms_per_beat = sharedPreferences.getInt("bpm", 0);
         isFlashlightOn = sharedPreferences.getBoolean("isFlashlightOn", true);
-        if (isFlashlightOn){
-            flashButton.setImageResource(R.drawable.ic_flash_img);
-            flashText.setTextColor(getResources().getColor(R.color.green));
-        }
-        else {
-            flashButton.setImageResource(R.drawable.ic_flash_off_img);
-            flashText.setTextColor(getResources().getColor(R.color.red));
-        }
+        setFlashImage();
         isSoundOn     = sharedPreferences.getBoolean("isSoundOn    ", true);
-        Log.i("LoadPreferences ",isSoundOn + "");
-        if (isSoundOn){
-            soundButton.setImageResource(R.drawable.ic_sound_img);
-            soundText.setTextColor(getResources().getColor(R.color.green));
-        }
-        else {
-            soundButton.setImageResource(R.drawable.ic_sound_off_img);
-            soundText.setTextColor(getResources().getColor(R.color.red));
-        }
+        setSoundImage();
         isVibrationOn = sharedPreferences.getBoolean("isVibrationOn", true);
-        if (isVibrationOn){
-            vibrationButton.setImageResource(R.drawable.ic_vibration_img);
-            vibrationText.setTextColor(getResources().getColor(R.color.green));
-        }
-        else {
-            vibrationButton.setImageResource(R.drawable.ic_vibration_off_img);
-            vibrationText.setTextColor(getResources().getColor(R.color.red));
-        }
+        setVibrationImage();
         isStarted     = sharedPreferences.getBoolean("isStarted    ", false);
-        if (isStarted){
-            startButton.setText(R.string.stop);
-            startButton.setBackgroundColor(Color.parseColor("#0BF2EA"));
+        setStarted();
 
-            Animation anim = new AlphaAnimation(1.0f, 0.0f);
-            int ms_per_beat = sharedPreferences.getInt("bpm", 0);
-            anim.setDuration(ms_per_beat); //You can manage the time of the blink with this parameter
-            anim.setStartOffset(0);
-            anim.setRepeatMode(Animation.REVERSE);
-            anim.setRepeatCount(Animation.INFINITE);
-            view.startAnimation(anim);
+    }
+
+    /**
+     * method set color and text of button and start of animation
+     */
+    private void setStarted() {
+        if (isStarted){
+            startButtonStop();
+            startAnimation();
         }
         else {
-            startButton.setText(R.string.start);
-            startButton.setBackgroundColor(Color.parseColor("#03a9f4"));
+            startButtonStart();
         }
     }
 
+    private void setVibrationImage() {
+        if (isVibrationOn){
+            vibrationOn();
+        }
+        else {
+            vibrationOff();
+        }
+    }
 
+    private void setSoundImage() {
+        if (isSoundOn){
+            soundOn();
+        }
+        else {
+            soundOff();
+        }
+    }
 
+    private void setFlashImage() {
+        if (isFlashlightOn){
+            flashOn();
+        }
+        else {
+            flashOff();
+        }
+    }
 
 
 }
