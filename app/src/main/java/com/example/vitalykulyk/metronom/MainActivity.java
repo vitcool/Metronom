@@ -108,9 +108,9 @@ public class MainActivity extends AppCompatActivity {
                     speedEdit.setText("100");
                 }
                 finally {
-                    if (Integer.parseInt(speedEdit.getText().toString()) > 200){
+                    if ((Integer.parseInt(speedEdit.getText().toString()) > 200 ) || (Integer.parseInt(speedEdit.getText().toString()) == 0)){
                         Toast toast = Toast.makeText(getApplicationContext(),
-                                "Incorrect input (input number > 200)", Toast.LENGTH_SHORT);
+                                "Incorrect input (input number > 200) or equals 0", Toast.LENGTH_SHORT);
                         toast.show();
                         speedEdit.setText("100");
                     }
@@ -204,6 +204,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                if (progresValue == 0){
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Incorrect input - number equals 0", Toast.LENGTH_SHORT);
+                    toast.show();
+                    seekBar.setProgress(100);
+                    progresValue = 100;
+                }
                 progress = progresValue;
             }
 
@@ -262,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
      * method starts animation of indicator
      */
     private void startAnimation() {
+
         ms_per_beat = 30000 / Integer.parseInt(speedEdit.getText().toString()) ;
         Animation anim = new AlphaAnimation(1.0f, 0.0f);
         anim.setDuration(ms_per_beat); //You can manage the time of the blink with this parameter
@@ -392,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void LoadPreferences(){
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        ms_per_beat = sharedPreferences.getInt("bpm", 0);
+        ms_per_beat = sharedPreferences.getInt("bpm", 100);
         seekBar.setProgress(ms_per_beat);
         /**
          * initialization of speedEdit by value of seekbar
