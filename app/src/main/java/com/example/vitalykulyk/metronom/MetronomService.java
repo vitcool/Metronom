@@ -15,8 +15,11 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-public class MetronomService extends Service {
+/**
+ * MetronomService is class extends Sevice and admit work with Metronom in new thread
+ */
 
+public class MetronomService extends Service {
 
     private static final String TAG = "MetronomService";
 
@@ -26,11 +29,9 @@ public class MetronomService extends Service {
     private double beatSound = 2440;
     private double sound = 6440;
 
-
-
-    // work with FlashLoght
-    private boolean hasFlash;
-
+    /**
+     * object of Metronom class
+     */
     Metronome metronome;
 
     public MetronomService() {
@@ -42,9 +43,6 @@ public class MetronomService extends Service {
         Log.i(TAG, "Service onCreate");
         metronome = new Metronome(this);
     }
-
-
-
     @Override
     public int onStartCommand(final Intent intent, int flags, final int startId) {
         if (intent !=null && intent.getExtras()!=null){
@@ -55,20 +53,23 @@ public class MetronomService extends Service {
             metronome.setIsVibrationOn(intent.getExtras().getBoolean("isVibrationOn", false));
         }
 
+        /**
+         * new thread of Service
+         */
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 _onStartSound(intent, startId);
-                //Your logic that service will perform will be placed here
-                //In this example we are just looping and waits for 1000 milliseconds in each loop.
-
-                //Stop service once it finishes its task
-
             }
         }).start();
         return Service.START_STICKY;
     }
+
+    /**
+     * method sets metronom parameters like beat, note value, beat sound
+     * * @param intent
+     * @param startId
+     */
 
     private void _onStartSound(final Intent intent, final int startId){
         metronome.setBeat(beats);
@@ -84,6 +85,9 @@ public class MetronomService extends Service {
 
     }
 
+    /**
+     * method which calls when apps is closed
+     */
     @Override
     public void onDestroy() {
         metronome.stop();
@@ -91,6 +95,11 @@ public class MetronomService extends Service {
         Log.i(TAG, "Service onDestroy");
     }
 
+    /**
+     * onBind method
+     * @param intent
+     * @return IBinder
+     */
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");

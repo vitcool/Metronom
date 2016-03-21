@@ -32,13 +32,11 @@ public class Metronome {
 	private final int tick = 1000; // samples of tick
 	
 	private boolean play = true;
-
 	private boolean isFlashOn;
 	private boolean isSoundOn;
 	private boolean isVibrationOn;
 
 	private AudioGenerator audioGenerator = new AudioGenerator(8000);
-//	private Handler mHandler;
 	private double[] soundTickArray;
 	private double[] silenceSoundArray;
 	private Message msg;
@@ -54,17 +52,8 @@ public class Metronome {
 	public Metronome(Context context) {
 		audioGenerator.createPlayer();
 		this.context = context;
-
-
 			v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-
-
-
-
-		/*
- * First check if device is supporting flashlight or not
- */
-
+			//check phone to camera supports
 			hasFlash = context.getApplicationContext().getPackageManager()
 					.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
@@ -86,6 +75,9 @@ public class Metronome {
 
 	}
 
+	/**
+	 * set parameters params and camera
+	 */
 	private void getCamera() {
 		if (camera == null) {
 			try {
@@ -96,7 +88,10 @@ public class Metronome {
 			}
 		}
 	}
-	
+
+	/**
+	 * calculate silence in player
+	 */
 	public void calcSilence() {
 			silence = (int) (((60/bpm)*8000)-tick);
 			soundTickArray = new double[this.tick];
@@ -116,16 +111,20 @@ public class Metronome {
 				silenceSoundArray[i] = 0;
 			}
 	}
-	
+
+	/**
+	 * make one "tick" of metronom
+	 * @throws InterruptedException
+	 */
 	public void play() throws InterruptedException {
 		calcSilence();
 		do {
-			//vibration
+			//make vibration if it needs
 			if (isVibrationOn) {
 				Log.i("ISVIBRATIONON", "");
 				v.vibrate(200);
 			}
-			//make sound
+			//make sound if it needs
 			if (isSoundOn) {
 				audioGenerator.writeSound(soundTickArray);
 			}
@@ -133,7 +132,7 @@ public class Metronome {
 				currentBeat++;
 				if (currentBeat > beat)
 					currentBeat = 1;
-			//flashLightStart();
+			//make flashlight if it needs
 			if (isFlashOn){
 				Log.i("ISFLASHON", "");
 				flashLightStart();
@@ -141,7 +140,11 @@ public class Metronome {
 			}
 		} while(play);
 	}
-	
+
+
+	/**
+	 * stops process of metronom playing
+	 */
 	public void stop() {
 		play = false;
 		audioGenerator.destroyAudioTrack();
@@ -167,55 +170,114 @@ public class Metronome {
 
 	}
 
-
-
+	/**
+	 * getters and setters
+	 * @return bpm
+	 */
 	public double getBpm() {
 		return bpm;
 	}
+
+	/**
+	 * sets value of bmp
+	 * @param bpm
+	 */
 
 	public void setBpm(int bpm) {
 		this.bpm = bpm;
 	}
 
+	/**
+	 * getters and setters
+	 * @return noteValue
+	 */
+
 	public int getNoteValue() {
 		return noteValue;
 	}
+
+	/**
+	 * sets value of noteValue
+	 * @param bpmetre
+	 */
 
 	public void setNoteValue(int bpmetre) {
 		this.noteValue = bpmetre;
 	}
 
+	/**
+	 * getters and setters
+	 * @return beat
+	 */
+
 	public int getBeat() {
 		return beat;
 	}
 
+	/**
+	 * sets vlue of beat
+	 * @param beat
+	 */
 	public void setBeat(int beat) {
 		this.beat = beat;
 	}
 
+	/**
+	 * getters and setters
+	 * @return beat sound
+	 */
 	public double getBeatSound() {
 		return beatSound;
 	}
 
+	/**
+	 * sets value of beatSound variable
+	 * @param sound1
+	 */
 	public void setBeatSound(double sound1) {
 		this.beatSound = sound1;
 	}
+
+	/**
+	 * getters and setters
+	 * @return sound
+	 */
 
 	public double getSound() {
 		return sound;
 	}
 
+	/**
+	 * getters and setters
+	 * sets value of sound
+	 */
+
 	public void setSound(double sound2) {
 		this.sound = sound2;
 	}
+
+	/**
+	 * getters and setters
+	 * sets value of isFlash variable
+	 */
 
 	public void setIsFlashOn(boolean isFlashOn) {
 		this.isFlashOn = isFlashOn;
 	}
 
+	/**
+	 * getters and setters
+	 * sets value of IsSoundOn variable
+	 */
+
 	public void setIsSoundOn(boolean isSoundOn) {
 		this.isSoundOn = isSoundOn;
 	}
+
+	/**
+	 * getters and setters
+	 * sets value of isVibrationOn variable
+	 */
 
 	public void setIsVibrationOn(boolean isVibrationOn) {
 		this.isVibrationOn = isVibrationOn;

@@ -14,6 +14,10 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
+/**
+ * AudioGenerator allow work with audio
+ */
+
 public class AudioGenerator {
 	
     private int sampleRate;
@@ -22,6 +26,14 @@ public class AudioGenerator {
     public AudioGenerator(int sampleRate) {
     	this.sampleRate = sampleRate;
     }
+
+    /**
+     * getSineWave generate samples
+     * @param samples
+     * @param sampleRate
+     * @param frequencyOfTone
+     * @return double[] sample
+     */
     
     public double[] getSineWave(int samples,int sampleRate,double frequencyOfTone) {
     	double[] sample = new double[samples];
@@ -30,7 +42,12 @@ public class AudioGenerator {
         }
 		return sample;
     }
-    
+
+    /**
+     * generate sounds
+     * @param samples
+     * @return generatedSound
+     */
     public byte[] get16BitPcm(double[] samples) {
     	byte[] generatedSound = new byte[2 * samples.length];
     	int index = 0;
@@ -44,21 +61,30 @@ public class AudioGenerator {
         }
     	return generatedSound;
     }
-    
+
+    /**
+     * create and customize new AudioTrack
+     */
     public void createPlayer(){
-    	//FIXME sometimes audioTrack isn't initialized
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 sampleRate, AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT, sampleRate,
                 AudioTrack.MODE_STREAM);
     	audioTrack.play();
     }
-    
+
+    /**
+     * write sound in player
+     * @param samples
+     */
     public void writeSound(double[] samples) {
     	byte[] generatedSnd = get16BitPcm(samples);
     	audioTrack.write(generatedSnd, 0, generatedSnd.length);
     }
-    
+
+    /**
+     * destroy audio player
+     */
     public void destroyAudioTrack() {
     	audioTrack.stop();
     	audioTrack.release();
