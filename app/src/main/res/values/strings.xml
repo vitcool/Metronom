@@ -9,5 +9,7 @@
     <string name="indicator">INDICATOR</string>
     <string name="start">START</string>
     <string name="stop">STOP</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
 
 </resources>

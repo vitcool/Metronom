@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
->
+    >
 
         <TextView
             android:layout_width="wrap_content"
@@ -53,6 +53,7 @@
                 android:paddingBottom="16dp"/>
 
             <TextView
+                android:id="@+id/vibrationText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/vibration"
@@ -83,6 +84,7 @@
                 android:paddingBottom="16dp"/>
 
             <TextView
+                android:id="@+id/flashText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/flash"
@@ -115,6 +117,7 @@
                 android:paddingBottom="16dp"/>
 
             <TextView
+                android:id="@+id/soundText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sound"
@@ -182,29 +185,60 @@
                     />
 
             </LinearLayout>
-
-
-
         </RelativeLayout>
 
 
 
     </RelativeLayout>
 
-    <SeekBar
-        android:id="@+id/seekBar1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="26dp"
-        android:max="200"/>
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_minus_img"
+            android:layout_marginTop="50dp"
+            />
+
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="18dp"
+            android:max="200"
+            android:thumb="@drawable/thumb"
+            android:progressDrawable="@drawable/seekbar_background"
+            />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plus_img"
+            android:layout_marginTop="50dp"
+            />
+
+
+/>
+
+
+
+    </LinearLayout>
+
+
 
     <RelativeLayout
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="9dp"
         >
 
         <LinearLayout
@@ -244,7 +278,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="18dp">
 
         <Button
             android:layout_width="wrap_content"

@@ -54,7 +54,8 @@ public class MetronomService extends Service {
         if (intent !=null && intent.getExtras()!=null){
             metronome.setBpm(intent.getExtras().getShort("BPM"));
             metronome.setIsFlashOn(intent.getExtras().getBoolean("isFlashlightOn", false));
-            metronome.setIsSoundOn(intent.getExtras().getBoolean("isSoundOn", false));
+            metronome.setIsSoundOn(intent.getExtras().getBoolean("isSoundOn", true));
+            Log.i("isSoundOn valur", intent.getExtras().getBoolean("isSoundOn", true) + "");
             metronome.setIsVibrationOn(intent.getExtras().getBoolean("isVibrationOn", false));
         }
 

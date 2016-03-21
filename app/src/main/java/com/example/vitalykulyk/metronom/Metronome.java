@@ -73,7 +73,7 @@ public class Metronome {
 				alert.show();
 				return;
 			}
-			getCamera();
+
 	}
 
 	private void getCamera() {
@@ -95,7 +95,7 @@ public class Metronome {
 				silenceSoundArray = new double[this.silence];
 			}
 			else {
-				silence = (int) (((60/bpm)*8000)-tick);
+				silence = 1;//(int) (((60/bpm)*8000)-tick);
 				silenceSoundArray = new double[this.silence];
 			}
 			double[] tick = audioGenerator.getSineWave(this.tick, 8000, beatSound);
@@ -139,6 +139,7 @@ public class Metronome {
 	}
 
 	public void flashLightStart(){
+		getCamera();
 		params = camera.getParameters();
 		params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 		camera.setParameters(params);

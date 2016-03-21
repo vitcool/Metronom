@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView bmpText;
     private View view;
 
+    private TextView vibrationText;
+    private TextView soundText;
+    private TextView flashText;
+
     private boolean isFlashlightOn   = true;
     private boolean isSoundOn        = true;
     private boolean isVibrationOn    = true;
@@ -54,13 +58,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initializeVariables();
         LoadPreferences();
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            Toast.makeText(this, "SavedInstance NOT null", Toast.LENGTH_SHORT).show();
-        } else {
-            // Probably initialize members with default values for a new instance
-            Toast.makeText(this, "SavedInstance null", Toast.LENGTH_SHORT).show();
-        }
 
         speedEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
                 speedEdit.setFocusableInTouchMode(true);
                 speedEdit.setInputType(InputType.TYPE_CLASS_TEXT);
                 speedEdit.requestFocus();
-                //seekBar.setProgress(Integer.parseInt((String) speedEdit.getText()));
             }
         });
 
@@ -81,9 +77,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("vibration layout", vibrationOn + "");
                 if (vibrationOn) {
                     vibrationButton.setImageResource(R.drawable.ic_vibration_off_img);
+                    vibrationText.setTextColor(getResources().getColor(R.color.red));
                     isVibrationOn = false;
                 } else {
                     vibrationButton.setImageResource(R.drawable.ic_vibration_img);
+                    vibrationText.setTextColor(getResources().getColor(R.color.green));
                     isVibrationOn = true;
                 }
                 vibrationOn = !vibrationOn;
@@ -97,9 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("sound layout", soundOn + "");
                 if (soundOn) {
                     soundButton.setImageResource(R.drawable.ic_sound_off_img);
+                    soundText.setTextColor(getResources().getColor(R.color.red));
                     isSoundOn = false;
                 } else {
                     soundButton.setImageResource(R.drawable.ic_sound_img);
+                    soundText.setTextColor(getResources().getColor(R.color.green));
                     isSoundOn = true;
                 }
                 soundOn = !soundOn;
@@ -113,9 +113,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("flash layout", flashOn + "");
                 if (flashOn) {
                     flashButton.setImageResource(R.drawable.ic_flash_off_img);
+                    flashText.setTextColor(getResources().getColor(R.color.red));
                     isFlashlightOn = false;
                 } else {
                     flashButton.setImageResource(R.drawable.ic_flash_img);
+                    flashText.setTextColor(getResources().getColor(R.color.green));
                     isFlashlightOn = true;
                 }
                 flashOn = !flashOn;
@@ -133,19 +135,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("OnClick", speedEdit.getText() + "");
                     i.putExtra("BPM", Short.parseShort(speedEdit.getText().toString()));
                     i.putExtra("isSoundOn", isSoundOn);
+                    Log.i("Main Activity isSoundOn", isSoundOn + "");
                     i.putExtra("isFlashlightOn", isFlashlightOn);
                     i.putExtra("isVibrationOn", isVibrationOn);
                     MainActivity.this.startService(i);
                     Animation anim = new AlphaAnimation(1.0f, 0.0f);
-                    anim.setDuration(ms_per_beat * 2); //You can manage the time of the blink with this parameter
+                    anim.setDuration(ms_per_beat / 2); //You can manage the time of the blink with this parameter
                     anim.setStartOffset(0);
                     anim.setRepeatMode(Animation.REVERSE);
                     anim.setRepeatCount(Animation.INFINITE);
                     view.startAnimation(anim);
-
-
-//                    startService(
-//                            new Intent(MainActivity.this, MetronomService.class));
                 } else {
                     startButton.setText(R.string.start);
                     startButton.setBackgroundColor(Color.parseColor("#03a9f4"));
@@ -195,6 +194,9 @@ public class MainActivity extends AppCompatActivity {
         startButton = (Button) findViewById(R.id.startButton);
         bmpText = (TextView) findViewById(R.id.speedEdit);
         view = (View) findViewById(R.id.indicatorView);
+        flashText = (TextView)findViewById(R.id.flashText);
+        vibrationText = (TextView)findViewById(R.id.vibrationText);
+        soundText = (TextView)findViewById(R.id.soundText);
     }
 
     private void flashlight() {
@@ -217,23 +219,30 @@ public class MainActivity extends AppCompatActivity {
         isFlashlightOn = sharedPreferences.getBoolean("isFlashlightOn", true);
         if (isFlashlightOn){
             flashButton.setImageResource(R.drawable.ic_flash_img);
+            flashText.setTextColor(getResources().getColor(R.color.green));
         }
         else {
             flashButton.setImageResource(R.drawable.ic_flash_off_img);
+            flashText.setTextColor(getResources().getColor(R.color.red));
         }
         isSoundOn     = sharedPreferences.getBoolean("isSoundOn    ", true);
-        if (!isSoundOn){
+        Log.i("LoadPreferences ",isSoundOn + "");
+        if (isSoundOn){
             soundButton.setImageResource(R.drawable.ic_sound_img);
+            soundText.setTextColor(getResources().getColor(R.color.green));
         }
         else {
             soundButton.setImageResource(R.drawable.ic_sound_off_img);
+            soundText.setTextColor(getResources().getColor(R.color.red));
         }
         isVibrationOn = sharedPreferences.getBoolean("isVibrationOn", true);
         if (isVibrationOn){
             vibrationButton.setImageResource(R.drawable.ic_vibration_img);
+            vibrationText.setTextColor(getResources().getColor(R.color.green));
         }
         else {
             vibrationButton.setImageResource(R.drawable.ic_vibration_off_img);
+            vibrationText.setTextColor(getResources().getColor(R.color.red));
         }
         isStarted     = sharedPreferences.getBoolean("isStarted    ", false);
         if (isStarted){
