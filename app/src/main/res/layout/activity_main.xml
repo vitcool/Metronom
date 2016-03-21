@@ -164,14 +164,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:singleLine="true"
-                    android:numeric="integer"
-                    android:inputType="numberDecimal"
-                    android:editable="true"
                     android:focusable="true"
                     android:clickable="true"
                     android:lines="1"
                     android:background="@android:color/transparent"
-                    android:textSize="36sp"/>
+                    android:textSize="36sp"
+                    android:inputType="numberDecimal"/>
 
                 <TextView
                     android:id="@+id/bmpText"

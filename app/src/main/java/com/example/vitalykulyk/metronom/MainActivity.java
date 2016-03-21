@@ -26,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initializeVariables();
         LoadPreferences();
+        setsSeekbarValue();
+
 
 
         /**
@@ -93,6 +96,26 @@ public class MainActivity extends AppCompatActivity {
                 speedEdit.setFocusableInTouchMode(true);
                 speedEdit.setInputType(InputType.TYPE_CLASS_TEXT);
                 speedEdit.requestFocus();
+                try
+                {
+                    Integer.parseInt(speedEdit.getText().toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Incorrect input (only numbers)", Toast.LENGTH_SHORT);
+                    toast.show();
+                    speedEdit.setText("100");
+                }
+                finally {
+                    if (Integer.parseInt(speedEdit.getText().toString()) > 200){
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Incorrect input (input number > 200)", Toast.LENGTH_SHORT);
+                        toast.show();
+                        speedEdit.setText("100");
+                    }
+                }
+                seekBar.setProgress(Integer.parseInt(speedEdit.getText().toString()));
             }
         });
 
@@ -164,7 +187,9 @@ public class MainActivity extends AppCompatActivity {
                     stopService();
                     stopAnimation();
                 }
-                ms_per_beat = 1000 * 60 / Short.parseShort(speedEdit.getText().toString());
+                //ms_per_beat = Integer.parseInt(speedEdit.getText().toString());
+                Log.i("ms_per_beat speed", speedEdit.getText().toString() + "");
+                Log.i("ms_per_beat start button", ms_per_beat + "");
                 isStarted = !isStarted;
             }
         });
@@ -173,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
          * customization of seekBar
          * start value is 100
          */
-        seekBar.setProgress(100);
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
 
@@ -191,11 +216,11 @@ public class MainActivity extends AppCompatActivity {
                 speedEdit.setText(progress + "");
             }
         });
+    }
 
-        /**
-         * initialization of speedEdit by value of seekbar
-         */
-        speedEdit.setText(seekBar.getProgress() + "");
+    private void setsSeekbarValue() {
+
+
     }
 
     /**
@@ -237,8 +262,10 @@ public class MainActivity extends AppCompatActivity {
      * method starts animation of indicator
      */
     private void startAnimation() {
+        ms_per_beat = 30000 / Integer.parseInt(speedEdit.getText().toString()) ;
         Animation anim = new AlphaAnimation(1.0f, 0.0f);
         anim.setDuration(ms_per_beat); //You can manage the time of the blink with this parameter
+        Log.i("ms_per_beat Animation", ms_per_beat + "");
         anim.setStartOffset(0);
         anim.setRepeatMode(Animation.REVERSE);
         anim.setRepeatCount(Animation.INFINITE);
@@ -366,6 +393,13 @@ public class MainActivity extends AppCompatActivity {
     private void LoadPreferences(){
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         ms_per_beat = sharedPreferences.getInt("bpm", 0);
+        seekBar.setProgress(ms_per_beat);
+        /**
+         * initialization of speedEdit by value of seekbar
+         */
+        speedEdit.setText(seekBar.getProgress() + "");
+
+        Log.i("ms_per_beat Load", ms_per_beat + "");
         isFlashlightOn = sharedPreferences.getBoolean("isFlashlightOn", true);
         setFlashImage();
         isSoundOn     = sharedPreferences.getBoolean("isSoundOn    ", true);

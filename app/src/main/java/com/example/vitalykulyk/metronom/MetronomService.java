@@ -26,9 +26,6 @@ public class MetronomService extends Service {
     private double beatSound = 2440;
     private double sound = 6440;
 
-    private boolean isSoundOn;
-    private boolean isVibrationOn ;
-    private boolean isFlashlightOn;
 
 
     // work with FlashLoght
