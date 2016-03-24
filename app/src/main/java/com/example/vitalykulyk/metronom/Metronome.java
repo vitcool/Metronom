@@ -122,7 +122,7 @@ public class Metronome {
 			//make vibration if it needs
 			if (isVibrationOn) {
 				Log.i("ISVIBRATIONON", "");
-				v.vibrate(200);
+				v.vibrate(50);
 			}
 			//make sound if it needs
 			if (isSoundOn) {

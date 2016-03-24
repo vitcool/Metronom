@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean soundOn = true;
     private boolean isStarted;
 
+
     private int ms_per_beat;
 
 
@@ -187,9 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     stopService();
                     stopAnimation();
                 }
-                //ms_per_beat = Integer.parseInt(speedEdit.getText().toString());
-                Log.i("ms_per_beat speed", speedEdit.getText().toString() + "");
-                Log.i("ms_per_beat start button", ms_per_beat + "");
                 isStarted = !isStarted;
             }
         });
@@ -251,6 +249,11 @@ public class MainActivity extends AppCompatActivity {
      * method sets text and background of startButton
      */
     private void startButtonStart() {
+        seekBar.setEnabled(           true);
+        soundButton.setEnabled(true);
+        speedEdit.setEnabled(true);
+        flashButton.setEnabled(true);
+        vibrationButton.setEnabled(true);
         startButton.setText(R.string.start);
         startButton.setBackgroundColor(Color.parseColor("#03a9f4"));
 
@@ -260,6 +263,11 @@ public class MainActivity extends AppCompatActivity {
      * method sets text and background of startButton
      */
     private void startButtonStop() {
+        seekBar.setEnabled(false);
+        speedEdit.setEnabled(false);
+        soundButton.setEnabled(false);
+        flashButton.setEnabled(false);
+        vibrationButton.setEnabled(false);
         startButton.setText(R.string.stop);
         startButton.setBackgroundColor(Color.parseColor("#0BF2EA"));
 
