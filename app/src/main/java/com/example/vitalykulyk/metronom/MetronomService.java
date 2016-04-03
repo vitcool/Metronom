@@ -19,8 +19,6 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
-import com.example.vitalykulyk.metronom.R;
 /**
  * MetronomService is class extends Sevice and admit work with Metronom in new thread
  */
@@ -147,9 +145,9 @@ public class MetronomService extends Service {
 
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("TutorialsFace Music Player")
+                .setContentTitle("Metronome")
                 .setTicker("TutorialsFace Music Player")
-                .setContentText("My song")
+                .setContentText("Metronome-Service")
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .setContentIntent(pendingIntent)
