@@ -11,10 +11,12 @@ package com.example.vitalykulyk.metronom;
  */
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -82,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeVariables();
-        LoadPreferences();
+        LoadPreferences(getApplicationContext());
         setsSeekbarValue();
 
 
@@ -307,7 +309,7 @@ public class MainActivity extends ActionBarActivity {
      */
     @Override
     public void onBackPressed() {
-        SavePreferences();
+        SavePreferences(getApplicationContext());
         super.onBackPressed();
     }
 
@@ -392,13 +394,14 @@ public class MainActivity extends ActionBarActivity {
     /**
      * SavePreferences saved boolean variables into saved preferences
      */
-    private void SavePreferences(){
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+    private void SavePreferences(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isFlashlightOn",isFlashlightOn);
         editor.putBoolean("isSoundOn    ", isSoundOn);
         editor.putBoolean("isVibrationOn", isVibrationOn);
-        editor.putBoolean("isStarted    ", isStarted);
+        editor.putBoolean("isStarted", isStarted);
+        Log.i("MAINS SAVE isStarted", "" + isStarted);
         editor.putInt("bpm",Integer.parseInt(speedEdit.getText().toString()));
         editor.commit();
     }
@@ -406,8 +409,8 @@ public class MainActivity extends ActionBarActivity {
     /**
      * LoadPreferences load boolean variables from saved preferences
      */
-    private void LoadPreferences(){
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+    private void LoadPreferences(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         ms_per_beat = sharedPreferences.getInt("bpm", 100);
         seekBar.setProgress(ms_per_beat);
         /**
@@ -422,7 +425,8 @@ public class MainActivity extends ActionBarActivity {
         setSoundImage();
         isVibrationOn = sharedPreferences.getBoolean("isVibrationOn", true);
         setVibrationImage();
-        isStarted     = sharedPreferences.getBoolean("isStarted    ", false);
+        isStarted     = sharedPreferences.getBoolean("isStarted", false);
+        Log.i("MAINS LOAD isStarted", "" + isStarted);
         setStarted();
 
     }
